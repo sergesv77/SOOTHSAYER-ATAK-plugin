@@ -6,10 +6,20 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+task wrapper(type: Wrapper){
+    gradleVersion = '7.2'
+}
+
+task prepareKotlinBuildScriptModel {
+
+}
+
 buildscript {
 
     ext.PLUGIN_VERSION = "1.1.1"
-    ext.ATAK_VERSION = "4.8.1"
+    ext.ATAK_VERSION = "4.8.0"
+
+    ext.kotlin_version = '1.6.10'
 
     def takdevVersion = '2.+'
 
@@ -41,7 +51,7 @@ buildscript {
     ext.takrepoUrl = getProperty(urlKey, 'https://localhost/')
     ext.takrepoUser = getProperty('takrepo.user', 'invalid')
     ext.takrepoPassword = getProperty('takrepo.password', 'invalid')
-    ext.takdevPlugin = getProperty('takdev.plugin', "${rootDir}/../../atak-gradle-takdev.jar")
+    ext.takdevPlugin = getProperty('takdev.plugin', "${rootDir}/libs/atak-gradle-takdev-2.4.1.jar")
 
     repositories {
         google()
@@ -59,7 +69,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         if(isDevKitEnabled()) {
             classpath "com.atakmap.gradle:atak-gradle-takdev:${takdevVersion}"
         } else {
@@ -85,12 +95,19 @@ apply plugin: 'atak-takdev-plugin'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 30
+
+    compileSdk 33
     buildToolsVersion "30.0.3"
 
-    dexOptions {
-        jumboMode = true
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
+
+//    dexOptions {
+//        jumboMode = true
+//    }
 
     lintOptions {
         checkReleaseBuilds true
@@ -176,6 +193,9 @@ android {
             setProperty("archivesBaseName", "ATAK-Plugin-" + rootProject.name + "-" + PLUGIN_VERSION + "-" + getVersionName() + "-" + ATAK_VERSION)
             defaultConfig.versionCode = getVersionCode()
             defaultConfig.versionName = PLUGIN_VERSION + " (" + getVersionName() + ") - [" + ATAK_VERSION + "]"
+            java {
+                srcDir 'src/main/java/com/atakmap/android/soothsayer/layers'
+            }
         }
 
 
@@ -205,6 +225,8 @@ ext {
 }
 
 dependencies {
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+
     implementation fileTree(dir: 'libs', include: '*.jar')
 //    // Recyclerview version depends on some androidx libraries which
 //    // are supplied by core, so they should be excluded.  Otherwise
@@ -224,5 +246,8 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
+//    implementation 'androidx.core:core:1.12.0'
+//    implementation fileTree(dir: '\\libs\\', include: ['*.aar', '*.jar'], exclude: [])
+    implementation 'androidx.media3:media3-common:1.1.1'
 }
 

@@ -5,10 +5,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.atakmap.android.maps.MetaShape;
 import com.atakmap.android.menu.PluginMenuParser;
 import com.atakmap.android.soothsayer.interfaces.CloudRFLayerListener;
 import com.atakmap.android.soothsayer.plugin.R;
-import com.atakmap.android.maps.MetaShape;
 import com.atakmap.coremap.log.Log;
 import com.atakmap.coremap.maps.coords.GeoBounds;
 import com.atakmap.coremap.maps.coords.GeoPoint;
